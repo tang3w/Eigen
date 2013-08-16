@@ -71,14 +71,8 @@ const char *BlockSig(id block) {
     return NULL;
 }
 
-@interface Eigen ()
-
-- (id)initWithClass:(id)cls;
-
-@end
-
 @implementation Eigen {
-    Class _class;
+    Class _klass;
 }
 
 + (void)eigenInstance:(id)instance handler:(EigenInstanceHandler)handler {
@@ -100,34 +94,38 @@ const char *BlockSig(id block) {
             objc_registerClassPair(eigenclass);
             object_setClass(instance, eigenclass);
             
-            eigen = [[Eigen alloc] initWithClass:eigenclass];
+            eigen = [[Eigen alloc] initWithKlass:eigenclass];
         }
     }
     
     handler(instance, eigen);
 }
 
-- (id)initWithClass:(id)cls {
+- (id)initWithKlass:(id)klass {
     self = [super init];
     
     if (self) {
-        _class = cls;
+        _klass = klass;
     }
     
     return self;
 }
 
+- (id)klass {
+    return _klass;
+}
+
 - (instancetype)addMethod:(SEL)selector byBlock:(id)block {
     const char *sig = BlockSig(block);
     if (sig != NULL) {
-        class_addMethod(_class, selector, imp_implementationWithBlock(block), sig);
+        class_addMethod(_klass, selector, imp_implementationWithBlock(block), sig);
     }
     
     return self;
 }
 
 - (id)superBlock:(SEL)selector {
-    Class superclass = class_getSuperclass(_class);
+    Class superclass = class_getSuperclass(_klass);
     
     if (superclass != Nil) {
         IMP imp = class_getMethodImplementation(superclass, selector);
@@ -137,6 +135,12 @@ const char *BlockSig(id block) {
     }
     
     return nil;
+}
+
+- (IMP)superImplementation:(SEL)selector {
+    Class superclass = class_getSuperclass(_klass);
+    
+    return class_getMethodImplementation(superclass, selector);
 }
 
 @end

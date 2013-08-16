@@ -27,13 +27,18 @@
 
 @class Eigen;
 
-typedef void(^EigenInstanceHandler)(id instance, Eigen *eigenclass);
+typedef void(^EigenInstanceHandler)(id instance, Eigen *eigen);
 
 @interface Eigen : NSObject
 
 + (void)eigenInstance:(id)instance handler:(EigenInstanceHandler)handler;
 
-- (instancetype)addMethod:(SEL)selector byBlock:(id)block;
+- (id)initWithKlass:(id)klass;
+
+- (id)klass;
 - (id)superBlock:(SEL)selector;
+- (IMP)superImplementation:(SEL)selector;
+
+- (instancetype)addMethod:(SEL)selector byBlock:(id)block;
 
 @end
