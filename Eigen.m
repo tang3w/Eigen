@@ -124,8 +124,12 @@ const char *BlockSig(id block) {
     return self;
 }
 
-- (id)superBlock:(SEL)selector {
-    Class superclass = class_getSuperclass(_klass);
+- (Class)superklass {
+    return class_getSuperclass(_klass);
+}
+
+- (Class)superblock:(SEL)selector {
+    Class superclass = [self superklass];
     
     if (superclass != Nil) {
         IMP imp = class_getMethodImplementation(superclass, selector);
@@ -138,7 +142,7 @@ const char *BlockSig(id block) {
 }
 
 - (IMP)superImplementation:(SEL)selector {
-    Class superclass = class_getSuperclass(_klass);
+    Class superclass = [self superklass];
     
     return class_getMethodImplementation(superclass, selector);
 }

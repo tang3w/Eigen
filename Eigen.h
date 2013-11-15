@@ -35,8 +35,9 @@ typedef void(^EigenInstanceHandler)(id instance, Eigen *eigen);
 
 - (id)initWithKlass:(id)klass;
 
-- (id)klass;
-- (id)superBlock:(SEL)selector;
+- (Class)klass;
+- (Class)superklass;
+- (id)superblock:(SEL)selector;
 - (IMP)superImplementation:(SEL)selector;
 
 - (instancetype)addMethod:(SEL)selector byBlock:(id)block;
